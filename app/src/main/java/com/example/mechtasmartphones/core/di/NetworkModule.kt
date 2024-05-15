@@ -3,6 +3,7 @@ package com.example.mechtasmartphones.core.di
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.mechtasmartphones.BuildConfig
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +35,13 @@ object NetworkModule {
 	): OkHttpClient {
 		return OkHttpClient.Builder()
 			.addInterceptor(ChuckerInterceptor(context = context))
+			.build()
+	}
+
+	@Provides
+	@Singleton
+	fun provideMoshi(): Moshi {
+		return Moshi.Builder()
 			.build()
 	}
 

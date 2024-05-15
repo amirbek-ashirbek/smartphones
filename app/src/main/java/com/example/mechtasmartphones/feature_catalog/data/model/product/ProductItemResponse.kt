@@ -1,6 +1,7 @@
 package com.example.mechtasmartphones.feature_catalog.data.model.product
 
 
+import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -68,8 +69,8 @@ data class ProductItemResponse(
     val sameProductProperties: List<String?>?,
 	@Json(name = "service")
     val service: Boolean?,
-	@Json(name = "stickers")
-    val stickers: Stickers?,
+//	@Json(name = "stickers")
+//    val stickers: Stickers?,
 	@Json(name = "title")
     val title: String?,
 	@Json(name = "type")
@@ -78,4 +79,13 @@ data class ProductItemResponse(
     val videoLink: List<String?>?,
 	@Json(name = "xml_id")
     val xmlId: String?
-)
+) {
+	companion object {
+		fun toProductItem(response: ProductItemResponse): ProductItem {
+			return ProductItem(
+				id = response.id ?: 0,
+				name = response.name.orEmpty()
+			)
+		}
+	}
+}
