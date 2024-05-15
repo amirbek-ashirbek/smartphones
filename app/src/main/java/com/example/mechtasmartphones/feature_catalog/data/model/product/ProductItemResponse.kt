@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ProductItem(
+data class ProductItemResponse(
 	@Json(name = "availability")
     val availability: String?,
 	@Json(name = "bonus")

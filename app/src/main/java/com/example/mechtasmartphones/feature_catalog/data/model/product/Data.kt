@@ -15,7 +15,7 @@ data class Data(
 	@Json(name = "index")
     val index: Boolean?,
 	@Json(name = "items")
-    val items: List<ProductItem?>?,
+    val items: List<ProductItemResponse?>?,
 	@Json(name = "meta_tags")
     val metaTags: MetaTags?,
 	@Json(name = "page_items_count")
