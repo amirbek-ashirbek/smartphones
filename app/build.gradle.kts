@@ -1,6 +1,8 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
+	alias(libs.plugins.kotlinAndroidKsp)
+	alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -42,6 +44,7 @@ android {
 	}
 	buildFeatures {
 		compose = true
+		buildConfig = true
 	}
 	composeOptions {
 		kotlinCompilerExtensionVersion = "1.5.14"
@@ -66,9 +69,18 @@ dependencies {
 
 	// Retrofit
 	implementation(libs.retrofit)
+	implementation(libs.retrofit.converter.moshi)
 
 	// Moshi
 	implementation(libs.moshi)
+	ksp(libs.moshi.kotlin.codegen)
+
+	// Chucker
+	implementation(libs.chucker)
+
+	// Hilt
+	implementation(libs.hilt.android)
+	ksp(libs.hilt.compiler)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
