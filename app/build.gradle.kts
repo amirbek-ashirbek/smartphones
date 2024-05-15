@@ -21,7 +21,11 @@ android {
 	}
 
 	buildTypes {
+		debug {
+			buildConfigField("String", "BASE_URL", "\"https://www.mechta.kz/api/v2/\"")
+		}
 		release {
+			buildConfigField("String", "BASE_URL", "\"https://www.mechta.kz/api/v2/\"")
 			isMinifyEnabled = false
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -59,6 +63,13 @@ dependencies {
 	implementation(libs.androidx.ui.graphics)
 	implementation(libs.androidx.ui.tooling.preview)
 	implementation(libs.androidx.material3)
+
+	// Retrofit
+	implementation(libs.retrofit)
+
+	// Moshi
+	implementation(libs.moshi)
+
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)
