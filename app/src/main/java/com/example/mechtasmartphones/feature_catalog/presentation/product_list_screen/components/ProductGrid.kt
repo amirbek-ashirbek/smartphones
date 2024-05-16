@@ -68,10 +68,10 @@ fun ProductGrid(
 				CustomLoadingIndicator()
 			}
 		}
-		errorMessage?.let {
+		errorMessage?.takeIf { !isLoading }?.let {
 			item(span = { GridItemSpan(PRODUCTS_GRID_COLUMNS_COUNT) }) {
 				TryAgainError(
-					errorMessage = errorMessage,
+					errorMessage = it,
 					onTryAgainClicked = onTryAgainClicked
 				)
 			}

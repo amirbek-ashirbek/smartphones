@@ -34,6 +34,7 @@ class ProductListViewModel @Inject constructor(
 		},
 		onRequest = { nextPage ->
 			getProductsUseCase(
+				// Ideally, "section" should be passed as a navigation argument
 				section = "smartfony",
 				page = nextPage,
 				pageLimit = PRODUCTS_PAGE_SIZE
