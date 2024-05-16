@@ -86,7 +86,8 @@ data class ProductItemResponse(
 				id = response.id ?: 0,
 				name = response.name.orEmpty(),
 				price = response.price ?: 0,
-				imageUrls = response.photos ?: emptyList()
+				imageUrls = response.photos ?: emptyList(),
+				code = response.code.orEmpty()
 			)
 		}
 	}
