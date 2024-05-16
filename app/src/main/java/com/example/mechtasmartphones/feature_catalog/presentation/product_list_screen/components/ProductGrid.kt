@@ -37,7 +37,8 @@ fun ProductGrid(
 	noMoreItemsToLoad: Boolean,
 	onUserScrolledToEnd: () -> Unit,
 	onTryAgainClicked: () -> Unit,
-	onItemClicked: (String) -> Unit
+	onItemClicked: (String) -> Unit,
+	onFavouriteClicked: (ProductItem) -> Unit
 ) {
 
 	val gridState = rememberLazyGridState()
@@ -60,11 +61,12 @@ fun ProductGrid(
 			ProductItem(
 				name = product.name,
 				imageUrl = product.imageUrls.first(),
-				isFavourite = false,
+				isFavourite = product.isFavourite,
 				price = product.price,
 				onItemClicked = {
 					onItemClicked(product.code)
-				}
+				},
+				onFavouriteClicked = { onFavouriteClicked(product) }
 			)
 		}
 		if (isLoading) {

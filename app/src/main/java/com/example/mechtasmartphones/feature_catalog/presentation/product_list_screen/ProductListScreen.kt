@@ -62,6 +62,9 @@ fun ProductListScreenContent(
 				onTryAgainClicked = { onEvent(ProductListEvent.TryAgainClicked) },
 				onItemClicked = {  productCode ->
 					onNavigateToProductDetails(productCode)
+				},
+				onFavouriteClicked = { product ->
+					onEvent(ProductListEvent.FavouriteToggled(product))
 				}
 			)
 		}

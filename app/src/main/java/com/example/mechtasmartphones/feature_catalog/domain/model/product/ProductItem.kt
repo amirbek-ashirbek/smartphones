@@ -5,5 +5,6 @@ data class ProductItem(
 	val name: String,
 	val price: Int,
 	val imageUrls: List<String>,
-	val code: String
+	val code: String,
+	val isFavourite: Boolean = false
 )
