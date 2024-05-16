@@ -30,6 +30,7 @@ import coil.request.ImageRequest
 import com.example.mechtasmartphones.R
 import com.example.mechtasmartphones.core.presentation.components.ActionButton
 import com.example.mechtasmartphones.core.presentation.util.noRippleClickable
+import com.example.mechtasmartphones.feature_catalog.presentation.components.ProductImage
 import com.example.mechtasmartphones.feature_catalog.presentation.util.Constants.PRODUCT_ITEM_CROSSFADE_ANIMATION_DURATION_IN_MILLIS
 import com.example.mechtasmartphones.ui.theme.SomeGray
 
@@ -39,10 +40,11 @@ fun ProductItem(
 	price: Int,
 	imageUrl: String,
 	isFavourite: Boolean,
+	onItemClicked: () -> Unit,
 	modifier: Modifier = Modifier
 ) {
 	Card(
-		onClick = { },
+		onClick = onItemClicked,
 		shape = RoundedCornerShape(6.dp),
 		colors = CardDefaults.cardColors(
 			containerColor = MaterialTheme.colorScheme.background
@@ -79,20 +81,6 @@ fun ProductItem(
 			)
 		}
 	}
-}
-
-@Composable
-private fun ProductImage(
-	url: String
-) {
-	AsyncImage(
-		model = ImageRequest
-			.Builder(LocalContext.current)
-			.data(url)
-			.crossfade(durationMillis = PRODUCT_ITEM_CROSSFADE_ANIMATION_DURATION_IN_MILLIS)
-			.build(),
-		contentDescription = null
-	)
 }
 
 @Composable

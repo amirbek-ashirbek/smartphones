@@ -11,4 +11,8 @@
     <!-- Errors -->
     <string name="generic_error_message">Произошла ошибка</string>
     <string name="network_error_message">Ошибка интернет-соединения</string>
+
+    <!-- ProductListScreen -->
+    <string name="main">Основное</string>
+
 </resources>

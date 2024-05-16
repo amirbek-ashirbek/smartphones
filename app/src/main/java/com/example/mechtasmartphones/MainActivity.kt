@@ -6,10 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.mechtasmartphones.feature_catalog.presentation.product_details_screen.ProductDetailsScreen
 import com.example.mechtasmartphones.feature_catalog.presentation.product_list_screen.ProductListScreen
+import com.example.mechtasmartphones.navigation.Screen
+import com.example.mechtasmartphones.navigation.canGoBack
 import com.example.mechtasmartphones.ui.theme.MechtaSmartphonesTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.Serializable
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -21,16 +23,27 @@ class MainActivity : ComponentActivity() {
 				val navController = rememberNavController()
 				NavHost(
 					navController = navController,
-					startDestination = ProductList
+					startDestination = Screen.ProductList
 				) {
-					composable<ProductList> {
-						ProductListScreen()
+					composable<Screen.ProductList> {
+						ProductListScreen(
+							onNavigateToProductDetails = { productCode ->
+								navController.navigate(
+									Screen.ProductDetails(productCode = productCode)
+								)
+							}
+						)
+					}
+					composable<Screen.ProductDetails> {
+						ProductDetailsScreen(
+							onBackClicked = {
+								if (navController.canGoBack)
+								navController.popBackStack()
+							}
+						)
 					}
 				}
 			}
 		}
 	}
 }
-
-@Serializable
-object ProductList

@@ -3,6 +3,8 @@ package com.example.mechtasmartphones.core.data.util
 import android.util.Log
 import com.example.mechtasmartphones.core.Response
 import com.squareup.moshi.Moshi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.io.IOException
@@ -23,6 +25,20 @@ class NetworkUtil @Inject constructor(
 			Log.d("what", "${e.message}")
 			Response.GenericError()
 		}
+	}
+
+	fun <T> safeApiCallFlow(apiCall: suspend () -> T): Flow<Response<T>> = flow {
+		val result = try {
+			Response.Success(apiCall())
+		} catch (e: HttpException) {
+			Response.GenericError(e.code(), parseError(e.response()?.errorBody()))
+		} catch (e: IOException) {
+			Response.NetworkError
+		} catch (e: Exception) {
+			Log.d("what", "${e.message}")
+			Response.GenericError()
+		}
+		emit(result)
 	}
 
 	private fun parseError(responseBody: ResponseBody?): ErrorResponse? {

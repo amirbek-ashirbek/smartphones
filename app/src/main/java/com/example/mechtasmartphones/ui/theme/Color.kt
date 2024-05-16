@@ -2,7 +2,11 @@ package com.example.mechtasmartphones.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Not enough time to set up theming properly
+
 val Gray97 = Color(0xFFF7F7F7)
+val GrayText = Color(0xFF959595)
+val GrayBackground = Color(0xFFEDEDEF)
 val MechtaColor = Color(0xFFE61471)
 val SomeGray = Color(0xFFBDBDBF)
 
