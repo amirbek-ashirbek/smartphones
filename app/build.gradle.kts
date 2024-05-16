@@ -1,6 +1,9 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
+	alias(libs.plugins.kotlin.serialization)
+	alias(libs.plugins.kotlinAndroidKsp)
+	alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -21,7 +24,11 @@ android {
 	}
 
 	buildTypes {
+		debug {
+			buildConfigField("String", "BASE_URL", "\"https://www.mechta.kz/api/v2/\"")
+		}
 		release {
+			buildConfigField("String", "BASE_URL", "\"https://www.mechta.kz/api/v2/\"")
 			isMinifyEnabled = false
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,6 +45,7 @@ android {
 	}
 	buildFeatures {
 		compose = true
+		buildConfig = true
 	}
 	composeOptions {
 		kotlinCompilerExtensionVersion = "1.5.14"
@@ -59,6 +67,30 @@ dependencies {
 	implementation(libs.androidx.ui.graphics)
 	implementation(libs.androidx.ui.tooling.preview)
 	implementation(libs.androidx.material3)
+
+	// Navigation
+	implementation(libs.navigation.compose)
+	implementation(libs.kotlinx.serialization.json)
+
+	// Retrofit
+	implementation(libs.retrofit)
+	implementation(libs.retrofit.converter.moshi)
+
+	// Moshi
+	implementation(libs.moshi)
+	ksp(libs.moshi.kotlin.codegen)
+
+	// Chucker
+	implementation(libs.chucker)
+
+	// Hilt
+	implementation(libs.hilt.android)
+	implementation(libs.hilt.navigation.compose)
+	ksp(libs.hilt.compiler)
+
+	// Coil
+	implementation(libs.coil.compose)
+
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)

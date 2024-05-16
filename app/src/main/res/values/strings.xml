@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">MechtaSmartphones</string>
+
+    <!-- ProductListScreen -->
+    <string name="product_count">%1$d товаров</string>
+    <string name="smartphones">Смартфоны</string>
+    <string name="product_price">%1$d ₸</string>
+    <string name="add_to_basket">В корзину</string>
+    <string name="refresh">Обновить</string>
+
+    <!-- Errors -->
+    <string name="generic_error_message">Произошла ошибка</string>
+    <string name="network_error_message">Ошибка интернет-соединения</string>
 </resources>
