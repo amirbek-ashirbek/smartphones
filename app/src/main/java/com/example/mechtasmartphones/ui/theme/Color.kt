@@ -2,6 +2,10 @@ package com.example.mechtasmartphones.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val Gray97 = Color(0xFFF7F7F7)
+val MechtaColor = Color(0xFFE61471)
+val SomeGray = Color(0xFFBDBDBF)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

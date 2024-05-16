@@ -84,7 +84,8 @@ class ProductListViewModel @Inject constructor(
 			currentState.copy(
 				products = currentState.products + newUniqueProducts,
 				productsPage = newKey,
-				productsEndReached = newUniqueProducts.isEmpty() || (currentState.productsPage == 1 && newUniqueProducts.size < PRODUCTS_PAGE_SIZE)
+				productsEndReached = newUniqueProducts.isEmpty() || (currentState.productsPage == 1 && newUniqueProducts.size < PRODUCTS_PAGE_SIZE),
+				productsTotalCount = productsData.totalItemCount
 			)
 		}
 	}

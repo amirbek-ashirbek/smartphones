@@ -44,7 +44,7 @@ data class ProductItemResponse(
 	@Json(name = "new_item")
     val newItem: Boolean?,
 	@Json(name = "photos")
-    val photos: List<String?>?,
+    val photos: List<String>?,
 	@Json(name = "pod_order_item")
     val podOrderItem: Boolean?,
 	@Json(name = "pod_order_time")
@@ -84,7 +84,9 @@ data class ProductItemResponse(
 		fun toProductItem(response: ProductItemResponse): ProductItem {
 			return ProductItem(
 				id = response.id ?: 0,
-				name = response.name.orEmpty()
+				name = response.name.orEmpty(),
+				price = response.price ?: 0,
+				imageUrls = response.photos ?: emptyList()
 			)
 		}
 	}
