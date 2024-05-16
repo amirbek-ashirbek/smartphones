@@ -33,6 +33,7 @@ fun ProductList(
 	}
 
 	InfiniteListHandler(
+		buffer = 10,
 		lazyListState = listState,
 		onLoadMore = {
 			if (!noMoreItemsToLoad) {

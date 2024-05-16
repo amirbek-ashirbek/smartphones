@@ -2,6 +2,7 @@ package com.example.mechtasmartphones.feature_catalog.domain.repository
 
 import com.example.mechtasmartphones.core.Response
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
+import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
 
 interface ProductRepository {
 
@@ -9,6 +10,6 @@ interface ProductRepository {
 		section: String,
 		page: Int?,
 		pageLimit: Int?
-	): Response<List<ProductItem>>
+	): Response<ProductsData>
 
 }

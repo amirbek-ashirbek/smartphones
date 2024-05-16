@@ -3,9 +3,11 @@ package com.example.mechtasmartphones.feature_catalog.presentation.product_list_
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mechtasmartphones.core.Response
-import com.example.mechtasmartphones.core.presentation.pagination.PaginatorImpl
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
+import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
 import com.example.mechtasmartphones.feature_catalog.domain.use_case.GetProductsUseCase
+import com.example.mechtasmartphones.feature_catalog.presentation.ProductsPaginator
+import com.example.mechtasmartphones.feature_catalog.presentation.util.Constants.PRODUCTS_PAGE_SIZE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +24,7 @@ class ProductListViewModel @Inject constructor(
 	private val _uiState = MutableStateFlow(ProductListState())
 	val uiState: StateFlow<ProductListState> = _uiState.asStateFlow()
 
-	private val productsPaginator = PaginatorImpl(
+	private val productsPaginator = ProductsPaginator<Int, ProductItem>(
 		initialKey = 1,
 		getNextKey = {
 			_uiState.value.productsPage +1
@@ -31,7 +33,7 @@ class ProductListViewModel @Inject constructor(
 			getProductsUseCase(
 				section = "smartfony",
 				page = nextPage,
-				pageLimit = 20
+				pageLimit = PRODUCTS_PAGE_SIZE
 			)
 		},
 		onLoadingUpdated = { isLoading ->
@@ -40,9 +42,9 @@ class ProductListViewModel @Inject constructor(
 		onError = { response ->
 			handleProductsError(response)
 		},
-		onSuccess = { nextProducts, newKey ->
+		onSuccess = { nextProductsData, newKey ->
 			handleProductsSuccess(
-				products = nextProducts,
+				productsData = nextProductsData,
 				newKey = newKey
 			)
 		}
@@ -70,11 +72,11 @@ class ProductListViewModel @Inject constructor(
 	}
 
 	private fun handleProductsSuccess(
-		products: List<ProductItem>,
+		productsData: ProductsData,
 		newKey: Int
 	) {
 		_uiState.update { currentState ->
-
+			val products = productsData.items
 			// Checking for unique IDs because backend returns the same product twice (ID 78716)
 			val existingProductIds = currentState.products.map { it.id }.toSet()
 			val newUniqueProducts = products.filter { it.id !in existingProductIds }
@@ -82,7 +84,7 @@ class ProductListViewModel @Inject constructor(
 			currentState.copy(
 				products = currentState.products + newUniqueProducts,
 				productsPage = newKey,
-				productsEndReached = newUniqueProducts.isEmpty() || (currentState.productsPage == 1 && newUniqueProducts.size < 20)
+				productsEndReached = newUniqueProducts.isEmpty() || (currentState.productsPage == 1 && newUniqueProducts.size < PRODUCTS_PAGE_SIZE)
 			)
 		}
 	}

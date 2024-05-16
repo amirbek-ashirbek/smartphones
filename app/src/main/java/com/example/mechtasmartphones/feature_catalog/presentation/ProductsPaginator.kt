@@ -1,15 +1,17 @@
-package com.example.mechtasmartphones.core.presentation.pagination
+package com.example.mechtasmartphones.feature_catalog.presentation
 
 import com.example.mechtasmartphones.core.Response
+import com.example.mechtasmartphones.core.presentation.pagination.Paginator
+import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
 import javax.inject.Inject
 
-class PaginatorImpl<Key, Item> @Inject constructor(
+class ProductsPaginator<Key, Item> @Inject constructor(
 	private val initialKey: Key,
 	private inline val onLoadingUpdated: (Boolean) -> Unit,
-	private inline val onRequest: suspend (nextKey: Key) -> Response<List<Item>>,
-	private inline val getNextKey: suspend (List<Item>) -> Key,
+	private inline val onRequest: suspend (nextKey: Key) -> Response<ProductsData>,
+	private inline val getNextKey: suspend (ProductsData) -> Key,
 	private inline val onError: (Response<*>) -> Unit,
-	private inline val onSuccess: (List<Item>, Key) -> Unit
+	private inline val onSuccess: (ProductsData, Key) -> Unit
 ) : Paginator<Key, Item> {
 
 	private var currentKey: Key = initialKey
@@ -31,10 +33,10 @@ class PaginatorImpl<Key, Item> @Inject constructor(
 				updateCurrentKey(newKey)
 			}
 			is Response.GenericError -> {
-				onError(response as Response<*>)
+				onError(response)
 			}
 			is Response.NetworkError -> {
-				onError(response as Response<*>)
+				onError(response)
 			}
 		}
 		onLoadingUpdated(false)

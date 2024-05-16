@@ -32,7 +32,7 @@ fun ProductListScreenContent(
 		ProductList(
 			products = uiState.products,
 			isLoading = uiState.productsAreLoading,
-			errorMessage = "",
+			errorMessage = uiState.productsErrorMessage,
 			noMoreItemsToLoad = uiState.productsEndReached,
 			onUserScrolledToEnd = { onEvent(ProductListEvent.UserScrolledToListEnd) }
 		)
