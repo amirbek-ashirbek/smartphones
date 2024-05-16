@@ -56,7 +56,8 @@ fun ProductListScreenContent(
 				isLoading = uiState.productsAreLoading,
 				errorMessage = uiState.productsErrorMessage,
 				noMoreItemsToLoad = uiState.productsEndReached,
-				onUserScrolledToEnd = { onEvent(ProductListEvent.UserScrolledToListEnd) }
+				onUserScrolledToEnd = { onEvent(ProductListEvent.UserScrolledToListEnd) },
+				onTryAgainClicked = { onEvent(ProductListEvent.TryAgainClicked) }
 			)
 		}
 	}

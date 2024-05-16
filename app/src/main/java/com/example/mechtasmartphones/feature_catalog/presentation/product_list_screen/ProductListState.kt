@@ -7,6 +7,6 @@ data class ProductListState(
 	val productsPage: Int = 1,
 	val productsAreLoading: Boolean = false,
 	val productsEndReached: Boolean = false,
-	val productsErrorMessage: String = "",
+	val productsErrorMessage: String? = null,
 	val productsTotalCount: Int = 0
 )

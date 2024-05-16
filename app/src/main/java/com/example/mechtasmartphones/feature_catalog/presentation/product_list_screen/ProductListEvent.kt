@@ -2,4 +2,5 @@ package com.example.mechtasmartphones.feature_catalog.presentation.product_list_
 
 sealed class ProductListEvent {
 	data object UserScrolledToListEnd : ProductListEvent()
+	data object TryAgainClicked : ProductListEvent()
 }

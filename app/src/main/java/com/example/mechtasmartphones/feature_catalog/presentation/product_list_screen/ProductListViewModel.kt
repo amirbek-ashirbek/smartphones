@@ -2,7 +2,9 @@ package com.example.mechtasmartphones.feature_catalog.presentation.product_list_
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mechtasmartphones.R
 import com.example.mechtasmartphones.core.Response
+import com.example.mechtasmartphones.core.presentation.util.StringResourcesProvider
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
 import com.example.mechtasmartphones.feature_catalog.domain.use_case.GetProductsUseCase
@@ -18,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-	private val getProductsUseCase: GetProductsUseCase
+	private val getProductsUseCase: GetProductsUseCase,
+	private val stringResourcesProvider: StringResourcesProvider
 ) : ViewModel() {
 
 	private val _uiState = MutableStateFlow(ProductListState())
@@ -37,7 +40,11 @@ class ProductListViewModel @Inject constructor(
 			)
 		},
 		onLoadingUpdated = { isLoading ->
-			_uiState.update { it.copy(productsAreLoading = isLoading) }
+			_uiState.update {
+				it.copy(
+					productsAreLoading = isLoading
+				)
+			}
 		},
 		onError = { response ->
 			handleProductsError(response)
@@ -57,6 +64,9 @@ class ProductListViewModel @Inject constructor(
 	fun onEvent(event: ProductListEvent) {
 		when (event) {
 			is ProductListEvent.UserScrolledToListEnd -> {
+				loadNextProducts()
+			}
+			is ProductListEvent.TryAgainClicked -> {
 				loadNextProducts()
 			}
 		}
@@ -85,13 +95,24 @@ class ProductListViewModel @Inject constructor(
 				products = currentState.products + newUniqueProducts,
 				productsPage = newKey,
 				productsEndReached = newUniqueProducts.isEmpty() || (currentState.productsPage == 1 && newUniqueProducts.size < PRODUCTS_PAGE_SIZE),
-				productsTotalCount = productsData.totalItemCount
+				productsTotalCount = productsData.totalItemCount,
+				productsErrorMessage = null
 			)
 		}
 	}
 
 	private fun handleProductsError(response: Response<*>) {
-
+		when (response) {
+			is Response.GenericError -> {
+				_uiState.update { it.copy(productsErrorMessage = stringResourcesProvider.getString(R.string.generic_error_message)) }
+			}
+			is Response.NetworkError -> {
+				_uiState.update { it.copy(productsErrorMessage = stringResourcesProvider.getString(R.string.network_error_message)) }
+			}
+			is Response.Success -> {}
+		}
 	}
+
+
 
 }

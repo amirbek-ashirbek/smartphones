@@ -1,22 +1,29 @@
 package com.example.mechtasmartphones.feature_catalog.presentation.product_list_screen.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.mechtasmartphones.R
+import com.example.mechtasmartphones.core.presentation.components.CustomLoadingIndicator
+import com.example.mechtasmartphones.core.presentation.components.TryAgainError
 import com.example.mechtasmartphones.core.presentation.pagination.InfiniteListHandler
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.example.mechtasmartphones.feature_catalog.presentation.util.Constants.PRODUCTS_GRID_COLUMNS_COUNT
@@ -29,6 +36,7 @@ fun ProductGrid(
 	errorMessage: String?,
 	noMoreItemsToLoad: Boolean,
 	onUserScrolledToEnd: () -> Unit,
+	onTryAgainClicked: () -> Unit
 ) {
 
 	val gridState = rememberLazyGridState()
@@ -54,6 +62,19 @@ fun ProductGrid(
 				isFavourite = false,
 				price = product.price
 			)
+		}
+		if (isLoading) {
+			item(span = { GridItemSpan(PRODUCTS_GRID_COLUMNS_COUNT) }) {
+				CustomLoadingIndicator()
+			}
+		}
+		errorMessage?.let {
+			item(span = { GridItemSpan(PRODUCTS_GRID_COLUMNS_COUNT) }) {
+				TryAgainError(
+					errorMessage = errorMessage,
+					onTryAgainClicked = onTryAgainClicked
+				)
+			}
 		}
 	}
 
