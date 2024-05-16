@@ -27,9 +27,12 @@ class MainActivity : ComponentActivity() {
 				) {
 					composable<Screen.ProductList> {
 						ProductListScreen(
-							onNavigateToProductDetails = { productCode ->
+							onNavigateToProductDetails = { productCode, isFavourite ->
 								navController.navigate(
-									Screen.ProductDetails(productCode = productCode)
+									Screen.ProductDetails(
+										productCode = productCode,
+										isFavourite = isFavourite
+									)
 								)
 							}
 						)
@@ -37,8 +40,9 @@ class MainActivity : ComponentActivity() {
 					composable<Screen.ProductDetails> {
 						ProductDetailsScreen(
 							onBackClicked = {
-								if (navController.canGoBack)
-								navController.popBackStack()
+								if (navController.canGoBack) {
+									navController.popBackStack()
+								}
 							}
 						)
 					}

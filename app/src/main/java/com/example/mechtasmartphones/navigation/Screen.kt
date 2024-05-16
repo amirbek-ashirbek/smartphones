@@ -10,6 +10,7 @@ sealed class Screen {
 
 	@Serializable
 	data class ProductDetails(
-		val productCode: String
+		val productCode: String,
+		val isFavourite: Boolean
 	)
 }

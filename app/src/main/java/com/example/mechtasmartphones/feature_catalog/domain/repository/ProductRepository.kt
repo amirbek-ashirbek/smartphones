@@ -1,7 +1,6 @@
 package com.example.mechtasmartphones.feature_catalog.domain.repository
 
 import com.example.mechtasmartphones.core.Response
-import com.example.mechtasmartphones.feature_catalog.data.local.ProductEntity
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
 import com.example.mechtasmartphones.feature_catalog.domain.model.product_details.ProductDetails

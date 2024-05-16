@@ -5,7 +5,6 @@ import com.example.mechtasmartphones.core.data.util.NetworkUtil
 import com.example.mechtasmartphones.feature_catalog.data.local.ProductDao
 import com.example.mechtasmartphones.feature_catalog.data.local.ProductEntity
 import com.example.mechtasmartphones.feature_catalog.data.local.ProductEntity.Companion.toProductEntity
-import com.example.mechtasmartphones.feature_catalog.data.model.product.ProductItemResponse
 import com.example.mechtasmartphones.feature_catalog.data.model.product.ProductItemResponse.Companion.toProductItem
 import com.example.mechtasmartphones.feature_catalog.data.model.product_details.ProductDetailsResponse.Companion.toProductDetails
 import com.example.mechtasmartphones.feature_catalog.data.remote.CatalogApi
