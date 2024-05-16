@@ -36,7 +36,8 @@ fun ProductGrid(
 	errorMessage: String?,
 	noMoreItemsToLoad: Boolean,
 	onUserScrolledToEnd: () -> Unit,
-	onTryAgainClicked: () -> Unit
+	onTryAgainClicked: () -> Unit,
+	onItemClicked: (String) -> Unit
 ) {
 
 	val gridState = rememberLazyGridState()
@@ -60,7 +61,10 @@ fun ProductGrid(
 				name = product.name,
 				imageUrl = product.imageUrls.first(),
 				isFavourite = false,
-				price = product.price
+				price = product.price,
+				onItemClicked = {
+					onItemClicked(product.code)
+				}
 			)
 		}
 		if (isLoading) {

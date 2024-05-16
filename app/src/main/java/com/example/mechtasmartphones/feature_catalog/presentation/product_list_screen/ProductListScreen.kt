@@ -20,20 +20,22 @@ import com.example.mechtasmartphones.feature_catalog.presentation.product_list_s
 
 @Composable
 fun ProductListScreen(
-
+	onNavigateToProductDetails: (String) -> Unit
 ) {
 	val viewModel: ProductListViewModel = hiltViewModel()
 
 	ProductListScreenContent(
 		uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
-		onEvent = viewModel::onEvent
+		onEvent = viewModel::onEvent,
+		onNavigateToProductDetails = onNavigateToProductDetails
 	)
 }
 
 @Composable
 fun ProductListScreenContent(
 	uiState: ProductListState,
-	onEvent: (ProductListEvent) -> Unit
+	onEvent: (ProductListEvent) -> Unit,
+	onNavigateToProductDetails: (String) -> Unit
 ) {
 	Surface(
 		modifier = Modifier
@@ -57,7 +59,10 @@ fun ProductListScreenContent(
 				errorMessage = uiState.productsErrorMessage,
 				noMoreItemsToLoad = uiState.productsEndReached,
 				onUserScrolledToEnd = { onEvent(ProductListEvent.UserScrolledToListEnd) },
-				onTryAgainClicked = { onEvent(ProductListEvent.TryAgainClicked) }
+				onTryAgainClicked = { onEvent(ProductListEvent.TryAgainClicked) },
+				onItemClicked = {  productCode ->
+					onNavigateToProductDetails(productCode)
+				}
 			)
 		}
 	}
