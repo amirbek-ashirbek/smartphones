@@ -25,7 +25,8 @@ data class ProductDetailsResponse(
                 mainProperties = response.data?.mainProperties?.map { propertyResponse ->
                     toMainProperty(propertyResponse)
                 } ?: emptyList(),
-                isFavourite = false
+                isFavourite = false,
+                code = response.data?.code.orEmpty()
             )
         }
     }

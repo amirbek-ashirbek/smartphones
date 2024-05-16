@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
 	@Query("SELECT * FROM favourite_products")
-	suspend fun getFavoriteProducts(): List<ProductEntity>
+	fun getFavoriteProducts(): Flow<List<ProductEntity>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun addProductToFavorites(product: ProductEntity)

@@ -13,7 +13,9 @@ import com.example.mechtasmartphones.feature_catalog.domain.model.product.Produc
 import com.example.mechtasmartphones.feature_catalog.domain.model.product_details.ProductDetails
 import com.example.mechtasmartphones.feature_catalog.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toSet
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
@@ -29,8 +31,8 @@ class ProductRepositoryImpl @Inject constructor(
 	): Response<ProductsData> {
 		return networkUtil.safeApiCall {
 
-			val favouriteProducts = productDao.getFavoriteProducts()
-			val favouriteProductsIds = favouriteProducts.map { it.id }.toSet()
+			val favouriteProductsIds = productDao.getFavoriteProducts()
+				.first().map { it.id }.toSet()
 
 			catalogApi.getProducts(
 				page = page,
@@ -77,8 +79,10 @@ class ProductRepositoryImpl @Inject constructor(
 		productDao.deleteProductFromFavorites(productId)
 	}
 
-	override suspend fun getFavoriteProducts(): List<ProductItem> {
-		return productDao.getFavoriteProducts().map { ProductEntity.toProductItem(it) }
+	override fun getFavoriteProducts(): Flow<List<ProductItem>> {
+		return productDao.getFavoriteProducts().map { entities ->
+			entities.map {ProductEntity.toProductItem(it)}
+		}
 	}
 
 }

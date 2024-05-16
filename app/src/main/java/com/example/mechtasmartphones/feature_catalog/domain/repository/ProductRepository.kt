@@ -22,6 +22,6 @@ interface ProductRepository {
 
 	suspend fun deleteProductFromFavorites(productId: Int)
 
-	suspend fun getFavoriteProducts(): List<ProductItem>
+	fun getFavoriteProducts(): Flow<List<ProductItem>>
 
 }
