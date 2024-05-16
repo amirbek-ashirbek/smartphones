@@ -7,19 +7,23 @@ import androidx.navigation.toRoute
 import com.example.mechtasmartphones.R
 import com.example.mechtasmartphones.core.Response
 import com.example.mechtasmartphones.core.presentation.util.StringResourcesProvider
+import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.example.mechtasmartphones.feature_catalog.domain.model.product_details.ProductDetails
 import com.example.mechtasmartphones.feature_catalog.domain.use_case.GetProductDetailsUseCase
+import com.example.mechtasmartphones.feature_catalog.domain.use_case.ToggleFavouriteUseCase
 import com.example.mechtasmartphones.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
 	private val getProductDetailsUseCase: GetProductDetailsUseCase,
+	private val toggleFavouriteUseCase: ToggleFavouriteUseCase,
 	private val stringResourcesProvider: StringResourcesProvider,
 	savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -27,9 +31,13 @@ class ProductDetailsViewModel @Inject constructor(
 	private val _uiState = MutableStateFlow<ProductDetailsState>(ProductDetailsState.Loading)
 	val uiState: StateFlow<ProductDetailsState> = _uiState.asStateFlow()
 
+	private val _isFavourite = MutableStateFlow(false)
+	val isFavourite: StateFlow<Boolean> = _isFavourite.asStateFlow()
+
 	private val navArgs = savedStateHandle.toRoute<Screen.ProductDetails>()
 
 	init {
+		_isFavourite.value = navArgs.isFavourite
 		getProductDetails(productCode = navArgs.productCode)
 	}
 
@@ -39,7 +47,7 @@ class ProductDetailsViewModel @Inject constructor(
 				getProductDetails(productCode = navArgs.productCode)
 			}
 			is ProductDetailsEvent.FavouriteClicked -> {
-
+				toggleFavourite()
 			}
 		}
 	}
@@ -75,6 +83,29 @@ class ProductDetailsViewModel @Inject constructor(
 		_uiState.value = ProductDetailsState.Error(
 			stringResourcesProvider.getString(R.string.network_error_message)
 		)
+	}
+
+	private fun toggleFavourite() {
+		val currentState = _uiState.value
+		if (currentState is ProductDetailsState.Success) {
+			val productDetails = currentState.data
+			val productItem = ProductItem(
+				id = productDetails.id,
+				name = productDetails.name,
+				price = productDetails.price,
+				imageUrls = productDetails.imageUrls,
+				code = productDetails.code,
+				isFavourite = productDetails.isFavourite
+			)
+
+			viewModelScope.launch {
+				val newFavouriteStatus = toggleFavouriteUseCase(productItem)
+				_isFavourite.value = newFavouriteStatus
+				_uiState.update {
+					ProductDetailsState.Success(productDetails.copy(isFavourite = newFavouriteStatus))
+				}
+			}
+		}
 	}
 
 }

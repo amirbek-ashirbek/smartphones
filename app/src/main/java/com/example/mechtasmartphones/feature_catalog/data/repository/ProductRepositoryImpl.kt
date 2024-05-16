@@ -2,19 +2,26 @@ package com.example.mechtasmartphones.feature_catalog.data.repository
 
 import com.example.mechtasmartphones.core.Response
 import com.example.mechtasmartphones.core.data.util.NetworkUtil
-import com.example.mechtasmartphones.feature_catalog.data.model.product.ProductItemResponse
+import com.example.mechtasmartphones.feature_catalog.data.local.ProductDao
+import com.example.mechtasmartphones.feature_catalog.data.local.ProductEntity
+import com.example.mechtasmartphones.feature_catalog.data.local.ProductEntity.Companion.toProductEntity
+import com.example.mechtasmartphones.feature_catalog.data.model.product.ProductItemResponse.Companion.toProductItem
 import com.example.mechtasmartphones.feature_catalog.data.model.product_details.ProductDetailsResponse.Companion.toProductDetails
 import com.example.mechtasmartphones.feature_catalog.data.remote.CatalogApi
+import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
 import com.example.mechtasmartphones.feature_catalog.domain.model.product_details.ProductDetails
 import com.example.mechtasmartphones.feature_catalog.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toSet
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
 	private val catalogApi: CatalogApi,
-	private val networkUtil: NetworkUtil
+	private val networkUtil: NetworkUtil,
+	private val productDao: ProductDao
 ) : ProductRepository {
 
 	override suspend fun getProducts(
@@ -23,13 +30,25 @@ class ProductRepositoryImpl @Inject constructor(
 		pageLimit: Int?
 	): Response<ProductsData> {
 		return networkUtil.safeApiCall {
+
+			val favouriteProductsIds = productDao.getFavoriteProducts()
+				.first().map { it.id }.toSet()
+
 			catalogApi.getProducts(
 				page = page,
 				pageLimit = pageLimit,
 				section = section
 			).data?.let { data ->
+
+				val products = data.items?.map { productResponse ->
+					val productItem = toProductItem(productResponse)
+					productItem.copy(
+						isFavourite = productItem.id in favouriteProductsIds
+					)
+				} ?: emptyList()
+
 				ProductsData(
-					items = data.items?.map(ProductItemResponse::toProductItem) ?: emptyList(),
+					items = products,
 					totalItemCount = data.allItemsCount ?: 0
 				)
 			} ?: ProductsData(items = emptyList(), totalItemCount = 0)
@@ -49,6 +68,20 @@ class ProductRepositoryImpl @Inject constructor(
 					Response.Success(productDetails)
 				}
 			}
+		}
+	}
+
+	override suspend fun addProductToFavorites(product: ProductItem) {
+		productDao.addProductToFavorites(toProductEntity(product))
+	}
+
+	override suspend fun deleteProductFromFavorites(productId: Int) {
+		productDao.deleteProductFromFavorites(productId)
+	}
+
+	override fun getFavoriteProducts(): Flow<List<ProductItem>> {
+		return productDao.getFavoriteProducts().map { entities ->
+			entities.map {ProductEntity.toProductItem(it)}
 		}
 	}
 

@@ -30,6 +30,7 @@ import com.example.mechtasmartphones.core.presentation.components.CustomTopAppBa
 import com.example.mechtasmartphones.core.presentation.components.TryAgainError
 import com.example.mechtasmartphones.feature_catalog.presentation.components.ProductImage
 import com.example.mechtasmartphones.feature_catalog.presentation.product_details_screen.components.ProductMainProperties
+import com.example.mechtasmartphones.ui.theme.SomeGray
 
 @Composable
 fun ProductDetailsScreen(
@@ -40,7 +41,8 @@ fun ProductDetailsScreen(
 	ProductDetailsScreenContent(
 		uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
 		onEvent = viewModel::onEvent,
-		onBackClicked = onBackClicked
+		onBackClicked = onBackClicked,
+		isFavourite = viewModel.isFavourite.collectAsStateWithLifecycle().value
 	)
 }
 
@@ -49,10 +51,12 @@ fun ProductDetailsScreen(
 fun ProductDetailsScreenContent(
 	uiState: ProductDetailsState,
 	onEvent: (ProductDetailsEvent) -> Unit,
-	onBackClicked: () -> Unit
+	onBackClicked: () -> Unit,
+	isFavourite: Boolean
 ) {
 
 	val scrollState = rememberScrollState()
+	val favouriteIconColor = if (isFavourite) MaterialTheme.colorScheme.primary else SomeGray
 
 	Scaffold(
 		topBar = {
@@ -61,7 +65,8 @@ fun ProductDetailsScreenContent(
 				actionIcon = Icons.Default.FavoriteBorder,
 				onActionIconClicked = { onEvent(ProductDetailsEvent.FavouriteClicked) },
 				colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-					containerColor = MaterialTheme.colorScheme.background
+					containerColor = MaterialTheme.colorScheme.background,
+					actionIconContentColor = favouriteIconColor
 				)
 			)
 		}

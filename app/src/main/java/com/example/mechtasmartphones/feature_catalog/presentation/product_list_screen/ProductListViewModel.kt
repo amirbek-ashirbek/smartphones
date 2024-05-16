@@ -7,7 +7,10 @@ import com.example.mechtasmartphones.core.Response
 import com.example.mechtasmartphones.core.presentation.util.StringResourcesProvider
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductItem
 import com.example.mechtasmartphones.feature_catalog.domain.model.product.ProductsData
+import com.example.mechtasmartphones.feature_catalog.domain.repository.ProductRepository
 import com.example.mechtasmartphones.feature_catalog.domain.use_case.GetProductsUseCase
+import com.example.mechtasmartphones.feature_catalog.domain.use_case.ObserveFavouriteProductsUseCase
+import com.example.mechtasmartphones.feature_catalog.domain.use_case.ToggleFavouriteUseCase
 import com.example.mechtasmartphones.feature_catalog.presentation.ProductsPaginator
 import com.example.mechtasmartphones.feature_catalog.presentation.util.Constants.PRODUCTS_PAGE_SIZE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
 	private val getProductsUseCase: GetProductsUseCase,
+	private val toggleFavouriteUseCase: ToggleFavouriteUseCase,
+	private val observeFavouriteProductsUseCase: ObserveFavouriteProductsUseCase,
 	private val stringResourcesProvider: StringResourcesProvider
 ) : ViewModel() {
 
@@ -60,6 +65,7 @@ class ProductListViewModel @Inject constructor(
 
 	init {
 		loadNextProducts()
+		observeFavouriteProducts()
 	}
 
 	fun onEvent(event: ProductListEvent) {
@@ -69,6 +75,9 @@ class ProductListViewModel @Inject constructor(
 			}
 			is ProductListEvent.TryAgainClicked -> {
 				loadNextProducts()
+			}
+			is ProductListEvent.FavouriteToggled -> {
+				toggleFavourite(product = event.product)
 			}
 		}
 	}
@@ -114,6 +123,25 @@ class ProductListViewModel @Inject constructor(
 		}
 	}
 
+	private fun toggleFavourite(product: ProductItem) {
+		viewModelScope.launch {
+			toggleFavouriteUseCase(product = product)
+		}
+	}
+
+	private fun observeFavouriteProducts() {
+		viewModelScope.launch {
+			observeFavouriteProductsUseCase().collect { favouriteProducts ->
+				_uiState.update { currentState ->
+					val updatedProducts = currentState.products.map { product ->
+						val isFavourite = favouriteProducts.any { it.id == product.id }
+						product.copy(isFavourite = isFavourite)
+					}
+					currentState.copy(products = updatedProducts)
+				}
+			}
+		}
+	}
 
 
 }

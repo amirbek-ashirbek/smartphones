@@ -18,4 +18,10 @@ interface ProductRepository {
 		productCode: String
 	): Flow<Response<ProductDetails>>
 
+	suspend fun addProductToFavorites(product: ProductItem)
+
+	suspend fun deleteProductFromFavorites(productId: Int)
+
+	fun getFavoriteProducts(): Flow<List<ProductItem>>
+
 }

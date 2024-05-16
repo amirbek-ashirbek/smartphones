@@ -19,13 +19,15 @@ data class ProductDetailsResponse(
     companion object {
         fun toProductDetails(response: ProductDetailsResponse): ProductDetails {
             return ProductDetails(
+                id = response.data?.id ?: 0,
                 name = response.data?.name.orEmpty(),
                 price = response.data?.price ?: 0,
                 imageUrls = response.data?.photos ?: emptyList(),
                 mainProperties = response.data?.mainProperties?.map { propertyResponse ->
                     toMainProperty(propertyResponse)
                 } ?: emptyList(),
-                isFavourite = false
+                isFavourite = false,
+                code = response.data?.code.orEmpty()
             )
         }
     }

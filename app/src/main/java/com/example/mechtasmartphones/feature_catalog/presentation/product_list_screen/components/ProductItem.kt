@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -18,20 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.mechtasmartphones.R
 import com.example.mechtasmartphones.core.presentation.components.ActionButton
 import com.example.mechtasmartphones.core.presentation.util.noRippleClickable
 import com.example.mechtasmartphones.feature_catalog.presentation.components.ProductImage
-import com.example.mechtasmartphones.feature_catalog.presentation.util.Constants.PRODUCT_ITEM_CROSSFADE_ANIMATION_DURATION_IN_MILLIS
 import com.example.mechtasmartphones.ui.theme.SomeGray
 
 @Composable
@@ -41,6 +33,7 @@ fun ProductItem(
 	imageUrl: String,
 	isFavourite: Boolean,
 	onItemClicked: () -> Unit,
+	onFavouriteClicked: () -> Unit,
 	modifier: Modifier = Modifier
 ) {
 	Card(
@@ -74,7 +67,7 @@ fun ProductItem(
 			}
 			FavouriteIcon(
 				isFavourite = isFavourite,
-				onClick = { },
+				onClick = onFavouriteClicked,
 				modifier = Modifier
 					.align(Alignment.TopEnd)
 					.padding(top = 12.dp, end = 12.dp)
