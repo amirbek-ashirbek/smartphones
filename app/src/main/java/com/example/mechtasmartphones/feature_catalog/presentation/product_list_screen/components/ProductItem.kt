@@ -19,14 +19,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.mechtasmartphones.R
+import com.example.mechtasmartphones.core.presentation.components.ActionButton
 import com.example.mechtasmartphones.core.presentation.util.noRippleClickable
+import com.example.mechtasmartphones.feature_catalog.presentation.util.Constants.PRODUCT_ITEM_CROSSFADE_ANIMATION_DURATION_IN_MILLIS
 import com.example.mechtasmartphones.ui.theme.SomeGray
 
 @Composable
@@ -57,11 +61,18 @@ fun ProductItem(
 				ProductNameText(name = name)
 				Spacer(modifier = Modifier.height(24.dp))
 				ProductPriceText(price = price)
+				Spacer(modifier = Modifier.height(16.dp))
+				ActionButton(
+					text = stringResource(id = R.string.add_to_basket),
+					onClick = { },
+					modifier = Modifier
+						.fillMaxWidth()
+				)
 				Spacer(modifier = Modifier.height(12.dp))
 			}
 			FavouriteIcon(
 				isFavourite = isFavourite,
-				onClick = { TODO() },
+				onClick = { },
 				modifier = Modifier
 					.align(Alignment.TopEnd)
 					.padding(top = 12.dp, end = 12.dp)
@@ -75,7 +86,11 @@ private fun ProductImage(
 	url: String
 ) {
 	AsyncImage(
-		model = url,
+		model = ImageRequest
+			.Builder(LocalContext.current)
+			.data(url)
+			.crossfade(durationMillis = PRODUCT_ITEM_CROSSFADE_ANIMATION_DURATION_IN_MILLIS)
+			.build(),
 		contentDescription = null
 	)
 }

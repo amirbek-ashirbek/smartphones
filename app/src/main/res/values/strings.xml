@@ -5,4 +5,5 @@
     <string name="product_count">%1$d товаров</string>
     <string name="smartphones">Смартфоны</string>
     <string name="product_price">%1$d ₸</string>
+    <string name="add_to_basket">В корзину</string>
 </resources>
