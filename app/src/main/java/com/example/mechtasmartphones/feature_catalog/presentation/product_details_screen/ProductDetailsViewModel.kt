@@ -47,7 +47,7 @@ class ProductDetailsViewModel @Inject constructor(
 				getProductDetails(productCode = navArgs.productCode)
 			}
 			is ProductDetailsEvent.FavouriteClicked -> {
-
+				toggleFavourite()
 			}
 		}
 	}
@@ -86,8 +86,25 @@ class ProductDetailsViewModel @Inject constructor(
 	}
 
 	private fun toggleFavourite() {
-		viewModelScope.launch {
+		val currentState = _uiState.value
+		if (currentState is ProductDetailsState.Success) {
+			val productDetails = currentState.data
+			val productItem = ProductItem(
+				id = productDetails.id,
+				name = productDetails.name,
+				price = productDetails.price,
+				imageUrls = productDetails.imageUrls,
+				code = productDetails.code,
+				isFavourite = productDetails.isFavourite
+			)
 
+			viewModelScope.launch {
+				val newFavouriteStatus = toggleFavouriteUseCase(productItem)
+				_isFavourite.value = newFavouriteStatus
+				_uiState.update {
+					ProductDetailsState.Success(productDetails.copy(isFavourite = newFavouriteStatus))
+				}
+			}
 		}
 	}
 
